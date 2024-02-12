@@ -54,27 +54,27 @@ fetch("conversation.json")
   });
 
 // Fetch and Render Conversation Data
-fetch("conversation.json") 
-    .then(response => response.json())
-    .then(data => {
-        const container = document.getElementById("conversation-container");
-        data.forEach(message => {
-            // ... (Create 'messageDiv', 'userSpan', 'timestampSpan', 'textP' - similar to  before) ... 
+fetch("conversation.json")
+  .then((response) => response.json())
+  .then((data) => {
+    const container = document.getElementById("conversation-container");
+    data.forEach((message) => {
+      // ... (Create 'messageDiv', 'userSpan', 'timestampSpan', 'textP' - similar to  before) ...
 
-            // Profile Picture
-            if (message.profile_image_url) {
-                let profileImg = document.createElement("img");
-                profileImg.src = message.profile_image_url;
-                profileImg.alt = "Profile picture of " + message.user; // Descriptive alt text
-                profileImg.classList.add("profile-pic"); // Add a class for optional styling
-                messageDiv.appendChild(profileImg); 
-            }
+      // Profile Picture
+      if (message.profile_image_url) {
+        let profileImg = document.createElement("img");
+        profileImg.src = message.profile_image_url;
+        profileImg.alt = "Profile picture of " + message.user; // Descriptive alt text
+        profileImg.classList.add("profile-pic"); // Add a class for optional styling
+        messageDiv.appendChild(profileImg);
+      }
 
-            // ... (Adding image if present - existing code) ...
+      // ... (Adding image if present - existing code) ...
 
-            container.appendChild(messageDiv); 
-        });
+      container.appendChild(messageDiv);
     });
+  });
 
 // Search Functionality
 const searchBox = document.getElementById("search-box");

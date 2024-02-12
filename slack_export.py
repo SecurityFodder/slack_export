@@ -21,9 +21,54 @@ def call_slack_api(method, data=None, params=None):
         print(f"Error interacting with Slack API: {e}")
         exit(1)
 
+
 # Create output directory
 output_dir = "slack_export"
+emojis_dir = os.path.join(output_dir, "emojis")
 os.makedirs(output_dir, exist_ok=True)
+os.makedirs(emojis_dir, exist_ok=True)
+
+# Function to download custom emojis (New Addition)
+
+
+def download_emoji(emoji_url, destination_folder):
+    filename = os.path.basename(emoji_url.rsplit(
+        '?', 1)[0])  # Handle potential query params
+    file_path = os.path.join(destination_folder, filename)
+
+    response = requests.get(emoji_url, stream=True)
+    response.raise_for_status()
+
+    with open(file_path, "wb") as f:
+        for chunk in response.iter_content(1024):
+            f.write(chunk)
+
+# Function for handling emojis (New Addition)
+
+
+def handle_emojis(text, output_data, current_message):
+    # You might need to refine this pattern
+    emoji_pattern = r":([a-zA-Z0-9+_-]+):"
+    emojis_found = re.findall(emoji_pattern, text)
+
+    if emojis_found:
+        # Get list of available emoji URLs
+        emoji_urls = call_slack_api("emoji.list")["emoji"].keys()
+
+        for emoji_name in emojis_found:
+            if emoji_name in emoji_urls:
+                emoji_url = emoji_urls[emoji_name]
+                if emoji_url.startswith("alias:"):  # Exclude alias emojis
+                    continue
+
+                emoji_filename = download_emoji(emoji_url, emojis_dir)
+                emoji_path = os.path.join(emojis_dir, emoji_filename)
+
+                # Replace emoji in text with a placeholder (could be an <img> tag if desired)
+                text = text.replace(f":{emoji_name}:", f"[EMOJI:{emoji_path}]")
+
+        current_message["text"] = text
+
 
 # Get conversation history in batches
 params = {"channel": CONVERSATION_ID, "limit": 200}
@@ -49,6 +94,8 @@ for message in all_messages:
         float(timestamp_ts)).strftime("%Y-%m-%d %H:%M:%S")
 
     text = message.get("text", "")
+    # Check for and potentially modify text
+    handle_emojis(text, output_data, message)
 
     # Handle images
     if "files" in message:
@@ -65,7 +112,7 @@ for message in all_messages:
                         f.write(response.content)  # Save image locally
 
                     # Keep track of the local image filename in your JSON for reference
-                    image_path = os.path.join(output_dir, image_filename) 
+                    image_path = os.path.join(output_dir, image_filename)
                 except requests.exceptions.RequestException as e:
                     print(f"Error downloading image: {e}")
 
@@ -74,9 +121,9 @@ for message in all_messages:
         "user": username,
         "timestamp": timestamp,
         "text": text,
-        "image_path": image_path if "image_path" in locals() else None  
+        "image_path": image_path if "image_path" in locals() else None
     }
-    output_data.append(output_line) 
+    output_data.append(output_line)
 
 # Write to JSON file
 with open(os.path.join(output_dir, "conversation.json"), "w") as f:
