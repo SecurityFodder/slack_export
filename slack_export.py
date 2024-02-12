@@ -21,7 +21,6 @@ def call_slack_api(method, data=None, params=None):
         print(f"Error interacting with Slack API: {e}")
         exit(1)
 
-
 # Create output directory
 output_dir = "slack_export"
 os.makedirs(output_dir, exist_ok=True)
@@ -59,22 +58,25 @@ for message in all_messages:
                 headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
                 try:
                     response = requests.get(image_url, headers=headers)
-                    response.raise_for_status()
+                    response.raise_for_status()  # Check for successful download
 
                     image_filename = os.path.basename(file["url_private"])
                     with open(os.path.join(output_dir, image_filename), "wb") as f:
-                        f.write(response.content)
+                        f.write(response.content)  # Save image locally
+
+                    # Keep track of the local image filename in your JSON for reference
+                    image_path = os.path.join(output_dir, image_filename) 
                 except requests.exceptions.RequestException as e:
                     print(f"Error downloading image: {e}")
 
-    # Build output structure for JSON
+    # Build output structure for JSON (Modified with local image reference)
     output_line = {
         "user": username,
         "timestamp": timestamp,
         "text": text,
-        "image_url": image_url if "image_url" in locals() else None
+        "image_path": image_path if "image_path" in locals() else None  
     }
-    output_data.append(output_line)
+    output_data.append(output_line) 
 
 # Write to JSON file
 with open(os.path.join(output_dir, "conversation.json"), "w") as f:

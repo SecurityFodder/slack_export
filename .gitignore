@@ -1,3 +1,7 @@
+# test_data
+slack_export/
+conversation.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,48 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Slack Conversation</title>
-    <style>
-      body {
-        background-color: #36393f; /* Slack's dark background */
-        color: #ddd; /* Light text color */
-        font-family: sans-serif;
-      }
+<head>
+<title>Slack Conversation</title>
+<style>
+body {
+    background-color: #36393F; /* Slack's dark background */
+    color: #ddd; /* Light text color */
+    font-family: sans-serif; 
+}
 
-      .message {
-        margin-bottom: 10px;
-        background-color: #44475a; /* Darker color for message containers */
-        border-radius: 5px;
-        padding: 10px;
-      }
+.message {
+    margin-bottom: 10px;
+    background-color: #44475A; /* Darker color for message containers */
+    border-radius: 5px;
+    padding: 10px;
+}
 
-      .user {
-        font-weight: bold;
-        color: #fff; /* Clearer username */
-      }
+.user { 
+    font-weight: bold; 
+    color: #fff; /* Brighter color for usernames */
+} 
 
-      .timestamp {
-        color: #888;
-      }
+.timestamp { 
+    color: #888;  /* Slightly dimmed timestamp */
+} 
 
-      img {
-        opacity: 0;
-        transition: opacity 0.5s ease-in;
-      }
+img {
+    /* opacity: 0;    */
+    transition: opacity 0.5s ease-in; 
+}
 
-      img.loaded {
-        opacity: 1;
-      }
+img.loaded {  
+    opacity: 1;
+}
 
-      #search-box {
-        margin-bottom: 20px; /* Add spacing above messages */
-        padding: 8px;
-      }
-    </style>
-  </head>
-  <body>
-    <input type="text" id="search-box" placeholder="Search conversation" />
-    <div id="conversation-container"></div>
-    <script src="script.js"></script>
-  </body>
+#search-box {
+    margin-bottom: 20px; /* Add spacing above messages */
+    padding: 8px;
+}
+
+.profile-pic {
+    width: 36px; 
+    height: 36px; 
+    border-radius: 50%; /* Make it circular */
+    margin-right: 10px; 
+    vertical-align: middle; /* Align nicely with text */ 
+}
+</style>
+</head>
+<body>
+    <input type="text" id="search-box" placeholder="Search conversation">
+    <div id="conversation-container"></div> 
+    <script src="script.js"></script> 
+</body>
 </html>
