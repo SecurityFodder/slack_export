@@ -8,12 +8,13 @@ SLACK_BOT_TOKEN = "xoxb-your-bot-token"
 CONVERSATION_ID = "C12345678"
 
 # Function to call Slack API endpoints
-
-
 def call_slack_api(method, data=None, params=None):
     url = f"https://slack.com/api/{method}"
     headers = {"Authorization": f"Bearer {SLACK_BOT_TOKEN}"}
     response = requests.post(url, headers=headers, data=data, params=params)
+    if not response.ok or not response.json().get("ok", False):
+        print(f"Something went wrong {response.text} - {url}")
+        exit(1)
     try:
         response.raise_for_status()
         return response.json()
@@ -44,8 +45,6 @@ def download_emoji(emoji_url, destination_folder):
             f.write(chunk)
 
 # Function for handling emojis (New Addition)
-
-
 def handle_emojis(text, output_data, current_message):
     # You might need to refine this pattern
     emoji_pattern = r":([a-zA-Z0-9+_-]+):"

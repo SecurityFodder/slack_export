@@ -77,6 +77,7 @@ fetch("conversation.json")
   });
 
 // Search Functionality
+// doesn't work yet!
 const searchBox = document.getElementById("search-box");
 const messages = document.querySelectorAll(".message");
 
